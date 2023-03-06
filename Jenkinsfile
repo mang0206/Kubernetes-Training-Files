@@ -18,7 +18,7 @@ pipeline {
             steps {
               sh '''
               docker build -t 192.168.1.10:8443/indexfile_for_jenkins_test .
-              docker push 192.168.1.10:8443/my_nginx
+              docker push 192.168.1.10:8443/indexfile_for_jenkins_test
               '''
             }
         }
