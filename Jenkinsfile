@@ -26,7 +26,7 @@ pipeline {
         stage('deploy kubernetes') {
           steps {
             sh '''
-            kubectl create deployment my-nginx --image=192.168.1.10:8443/my_nginx
+            kubectl create deployment my-nginx --image=192.168.1.10:8443/indexfile_for_jenkins_test
             kubectl expose deployment my-nginx --type=LoadBalancer --port=8080 \
                                                    --target-port=80 --name=my-nginx-svc
             '''
