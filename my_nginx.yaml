@@ -14,7 +14,7 @@ spec:
   volumes:
     - name: pv-hostpath
       hostPath:
-        path: ./IndexDirectory
+        path: /home/jenkins/workspace/nginx_test/IndexDirectory
         type: Directory
 ---
 apiVersion: v1
