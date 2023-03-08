@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-nginx
+spec:
+  containers:
+    - name: my-nginx
+      image: --image=192.168.1.10:8443/indexfile_for_jenkins_test
+      ports:
+      - containerPort: 80
+      volumeMounts:
+      - mountPath: "/usr/share/nginx/html"
+        name: pv-hostpath
+  volumes:
+    - name: pv-hostpath
+      hostPath:
+        path: ./IndexDirectory
+        type: Directory
+---
+apiVersion: v1
+kind: LoadBalancer
+metadata:
+  name: np-svc
+spec:
+  selector:
+    app: my-nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30000
+  type: NodePort
