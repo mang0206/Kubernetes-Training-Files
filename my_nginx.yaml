@@ -10,12 +10,11 @@ spec:
       - containerPort: 8080
       volumeMounts:
       - mountPath: "/usr/share/nginx/html"
-        name: pv-hostpath
+        name: nfs-vol
   volumes:
-    - name: pv-hostpath
-      hostPath:
-        path: /home/jenkins/workspace/nginx_test/IndexDirectory
-        type: Directory
+    - name: nfs-vol
+      persistentVolumeClaim:
+        claimName: jenkins
 ---
 apiVersion: v1
 kind: Service
