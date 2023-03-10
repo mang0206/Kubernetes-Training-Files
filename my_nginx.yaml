@@ -7,7 +7,7 @@ metadata:
 spec:
   containers:
     - name: my-nginx
-      image: 192.168.1.10:8443/indexfile_for_jenkins_test
+      image: 192.168.1.10:8443/my_nginx
       ports:
       - containerPort: 80
       volumeMounts:
@@ -16,7 +16,7 @@ spec:
   volumes:
     - name: nfs-vol
       persistentVolumeClaim:
-        claimName: jenkins
+        claimName: jenkins_pvc
 ---
 apiVersion: v1
 kind: Service
@@ -30,4 +30,5 @@ spec:
       protocol: TCP
       port: 8080
       targetPort: 80
-  type: LoadBalancer
+      nodePort: 30000
+  type: NodePort

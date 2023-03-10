@@ -10,10 +10,6 @@ pipeline {
             steps {
                 git url: "${GIT_URL}", 
                     branch: "main"
-                sh '''
-                pwd
-                ls -al
-                '''
             }
         }
         
@@ -30,6 +26,7 @@ pipeline {
           steps {
             sh '''
             kubectl apply -f my_nginx.yaml
+            kubectl apply -f jenkins_volume.yaml
             '''
           }
         }

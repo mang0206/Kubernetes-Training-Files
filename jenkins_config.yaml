@@ -58,9 +58,10 @@ jenkins:
         - hostPathVolume:
             hostPath: "/var/run/docker.sock"
             mountPath: "/var/run/docker.sock"
-        - hostPathVolume:
-            hostPath: "/jenkins_shared"
-            mountPath: "/home/jenkins"
+        - nfsVolume:
+            serverAddress: "192.168.1.10"
+            serverPath: "/jenkins_shared"
+            mountPath: "/home/jenkins/workspace"
         yamlMergeStrategy: "override"
   crumbIssuer:
     standard:
