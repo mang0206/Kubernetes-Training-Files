@@ -2,9 +2,11 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: my-nginx
+  label:
+    app: my-nginx
 spec:
   containers:
-    - app: my-nginx
+    - name: my-nginx
       image: 192.168.1.10:8443/indexfile_for_jenkins_test
       ports:
       - containerPort: 8080
