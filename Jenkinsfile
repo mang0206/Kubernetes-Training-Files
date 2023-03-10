@@ -10,7 +10,6 @@ pipeline {
             steps {
                 git url: "${GIT_URL}", 
                     branch: "main", 
-                    credentialsId: "for_kubernetice"
                 sh '''
                 pwd
                 ls -al

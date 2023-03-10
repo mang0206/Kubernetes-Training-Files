@@ -5,7 +5,7 @@ metadata:
 spec:
   containers:
     - name: my-nginx
-      image: --image=192.168.1.10:8443/indexfile_for_jenkins_test
+      image: 192.168.1.10:8443/indexfile_for_jenkins_test
       ports:
       - containerPort: 8080
       volumeMounts:
