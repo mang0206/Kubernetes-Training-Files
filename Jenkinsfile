@@ -9,7 +9,7 @@ pipeline {
         stage('Pull') {
             steps {
                 git url: "${GIT_URL}", 
-                    branch: "main", 
+                    branch: "main"
                 sh '''
                 pwd
                 ls -al
