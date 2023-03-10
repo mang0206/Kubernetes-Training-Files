@@ -25,8 +25,8 @@ pipeline {
         stage('deploy kubernetes') {
           steps {
             sh '''
-            kubectl apply -f my_nginx.yaml
             kubectl apply -f jenkins_volume.yaml
+            kubectl apply -f my_nginx.yaml
             '''
           }
         }
