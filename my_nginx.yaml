@@ -4,10 +4,10 @@ metadata:
   name: my-nginx
 spec:
   containers:
-    - name: my-nginx
+    - app: my-nginx
       image: 192.168.1.10:8443/indexfile_for_jenkins_test
       ports:
-      - containerPort: 80
+      - containerPort: 8080
       volumeMounts:
       - mountPath: "/usr/share/nginx/html"
         name: nfs-vol
@@ -27,6 +27,6 @@ spec:
     - name: http
       protocol: TCP
       port: 8080
-      targetPort: 80
+      targetPort: 8080
       nodePort: 30000
   type: NodePort
