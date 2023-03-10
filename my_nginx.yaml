@@ -16,7 +16,7 @@ spec:
   volumes:
     - name: nfs-vol
       persistentVolumeClaim:
-        claimName: jenkins_pvc
+        claimName: jenkins-pvc
 ---
 apiVersion: v1
 kind: Service
