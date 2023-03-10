@@ -9,7 +9,7 @@ spec:
     - name: my-nginx
       image: 192.168.1.10:8443/indexfile_for_jenkins_test
       ports:
-      - containerPort: 8080
+      - containerPort: 80
       volumeMounts:
       - mountPath: "/usr/share/nginx/html"
         name: nfs-vol
@@ -28,7 +28,6 @@ spec:
   ports:
     - name: http
       protocol: TCP
-      port: 80
-      targetPort: 8080
-      nodePort: 30000
-  type: NodePort
+      port: 8080
+      targetPort: 80
+  type: LoadBalancer
