@@ -1,0 +1,114 @@
+aapiVersion: v1
+kind: Namespace
+metadata:
+  name: my-mysql
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: mysql-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-0
+  labels:
+    app: mysql
+spec:
+  storageClassName: mysql-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: db
+            operator: In
+            values:
+              - mysql
+  claimRef:
+    name: data-mysql-0
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mysql"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv-1
+  labels:
+    app: mysql
+spec:
+  storageClassName: mysql-storage
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+          - key: db
+            operator: In
+            values:
+              - mysql
+  claimRef:
+    name: data-mysql-1
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: "/mysql"
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: my-mysql
+spec:
+  serviceName: mysql
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      terminationGracePeriodSeconds: 10
+      tolerations:
+        - key: db
+          operator: Equal
+          value: mysql
+          effect: NoSchedule
+      containers:
+        - name: mysql
+          image: mysql:5.7
+          ports:
+            - protocol: TCP
+              containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: sns
+            - name: MYSQL_DATABASE
+              value: sns
+          
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        namespace: my-mysql
+      spec:
+        storageClassName: mysql-storage
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
