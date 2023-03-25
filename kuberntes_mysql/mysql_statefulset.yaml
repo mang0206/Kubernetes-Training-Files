@@ -10,7 +10,7 @@ metadata:
   namespace: my-mysql
 type: Opaque
 stringData:
-  root-password: sns-root
+  root-password: snsroot
   user-password: sns
 ---
 apiVersion: v1
@@ -31,12 +31,12 @@ metadata:
   labels:
     app: mysql
 data:
-  primary.cnf: |
+  master.cnf: |
     # Apply this config only on the primary.
     [mysqld]
     log-bin
     datadir=/var/lib/mysql
-  replica.cnf: |
+  slave.cnf: |
     # Apply this config only on replicas.
     [mysqld]
     super-read-only
@@ -110,7 +110,7 @@ spec:
     spec:
       initContainers:
       - name: init-mysql
-        image: mysql:5.7
+        image: mysql:5.7-debian
         command:
         - bash
         - "-c"
@@ -156,7 +156,7 @@ spec:
           subPath: mysql
         - name: conf
           mountPath: /etc/mysql/conf.d
-      terminationGracePeriodSeconds: 10
+      terminationGracePeriodSeconds: 60
       tolerations:
       - key: db
         operator: Equal
@@ -173,7 +173,7 @@ spec:
                 - w3-k8s
       containers:
       - name: mysql
-        image: mysql:5.7
+        image: mysql:5.7-debian
         ports:
         - name: mysql
           containerPort: 3306
@@ -211,14 +211,14 @@ spec:
           mountPath: /etc/mysql/conf.d
         resources:
           requests:
-            cpu: 500m
+            cpu: 600m
             memory: 1Gi
         livenessProbe:
           exec:
             command: ["mysqladmin", "-uroot", "-p$MYSQL_ROOT_PASSWORD", "ping"]
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
+          initialDelaySeconds: 100
+          periodSeconds: 100
+          timeoutSeconds: 100
         readinessProbe:
           exec:
             # Check we can execute queries over TCP (skip-networking is off).
@@ -227,9 +227,9 @@ spec:
             - -ec
             - >-
               mysql -h127.0.0.1 -uroot -p$MYSQL_ROOT_PASSWORD -e'SELECT 1'
-          initialDelaySeconds: 5
-          periodSeconds: 2
-          timeoutSeconds: 1
+          initialDelaySeconds: 50
+          periodSeconds: 20
+          timeoutSeconds: 10
       - name: xtrabackup
         image: gcr.io/google-samples/xtrabackup:1.0
         env:
@@ -292,8 +292,8 @@ spec:
           mountPath: /etc/mysql/conf.d
         resources:
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: 200m
+            memory: 200Mi
       volumes:
       - name: conf
         emptyDir: {}
